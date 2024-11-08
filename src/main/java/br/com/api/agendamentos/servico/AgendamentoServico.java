@@ -4,6 +4,9 @@ import br.com.api.agendamentos.modelo.Agendamento;
 import br.com.api.agendamentos.modelo.RespostaModelo;
 import br.com.api.agendamentos.repositorio.AgendamentoRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -17,11 +20,16 @@ public class AgendamentoServico {
     @Autowired
     private RespostaModelo respostaModelo;
 
-    public Iterable<Agendamento> listar(){
+    public Iterable<Agendamento> listarTodos(){
         return agendamentoRepositorio.findAll();
     }
 
-    public ResponseEntity<?> casdastrarAlaterar(Agendamento agendamento, String acao){
+    public Page<Agendamento> listarPaginado(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return agendamentoRepositorio.findAll(pageable);
+    }
+
+    public ResponseEntity<?> casdastrarAlterar(Agendamento agendamento, String acao){
         if(agendamento.getDescricao().equals("")){
             respostaModelo.setMensagem("A descrição do agendamento é obrigatório ");
             return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
