@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @Service
 public class AgendamentoServico {
 
@@ -20,17 +23,20 @@ public class AgendamentoServico {
     @Autowired
     private RespostaModelo respostaModelo;
 
-    public Iterable<Agendamento> listarTodos(){
-        return agendamentoRepositorio.findAll();
+    public List<Agendamento> listarTodosOrdenadosPorData() {
+        return agendamentoRepositorio.findAllByOrderByDataAscHoraAsc();
     }
 
     public Page<Agendamento> listarPaginado(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return agendamentoRepositorio.findAll(pageable);
     }
+    public List<Agendamento> listarPorDescricao(String texto){
+        return agendamentoRepositorio.findAgendamentoByDescricao(texto);
+    }
 
     public ResponseEntity<?> casdastrarAlterar(Agendamento agendamento, String acao){
-        if(agendamento.getDescricao().equals("")){
+        if(agendamento.getDescricao().isEmpty()){
             respostaModelo.setMensagem("A descrição do agendamento é obrigatório ");
             return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         } else if(agendamento.getData().equals("")){
@@ -54,4 +60,7 @@ public class AgendamentoServico {
         return new ResponseEntity<>(respostaModelo, HttpStatus.OK);
     }
 
+    public List<Agendamento> listarPorIntervalo(LocalDate dataInicial, LocalDate dataFinal) {
+        return agendamentoRepositorio.findByDataBetween(dataInicial, dataFinal);
+    }
 }
