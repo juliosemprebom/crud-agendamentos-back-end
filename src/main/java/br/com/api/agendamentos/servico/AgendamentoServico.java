@@ -39,10 +39,10 @@ public class AgendamentoServico {
         if(agendamento.getDescricao().isEmpty()){
             respostaModelo.setMensagem("A descrição do agendamento é obrigatório ");
             return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
-        } else if(agendamento.getData().equals("")){
+        } else if(agendamento.getData()== null){
             respostaModelo.setMensagem("A data do agendamento é obrigatório ");
-            return new ResponseEntity<>(agendamento, HttpStatus.BAD_REQUEST);
-        } else if (agendamento.getHora().equals("")) {
+            return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
+        } else if (agendamento.getHora() == null) {
             respostaModelo.setMensagem("A hora é obrigatório");
             return new ResponseEntity<>(respostaModelo, HttpStatus.BAD_REQUEST);
         } else {
