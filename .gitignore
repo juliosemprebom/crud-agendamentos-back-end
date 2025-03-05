@@ -37,4 +37,4 @@ build/
 
 ### Docker ###
 /docker-compose.yaml
-
+/.env
